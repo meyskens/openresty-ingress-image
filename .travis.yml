@@ -1,0 +1,26 @@
+udo: required
+services: docker
+language: bash
+env:
+    global:
+      - QEMU_VER=v2.9.1
+      - DOCKER_REPO=maartje/k8s-openresty-ingress-autossl
+    matrix:
+      - ARCH=amd64 QQEMU_ARCH=x86_64
+      - ARCH=armhf QEMU_ARCH=arm
+      - ARCH=arm64 QEMU_ARCH=aarch64
+
+before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y install docker-ce
+  - sudo apt-get -y install qemu-user-static
+  - docker run --rm --privileged multiarch/qemu-user-static:register
+
+script:
+  - docker build -t $DOCKER_REPO:$ARCH-v0.1.0 --build-arg ARCH="$ARCH" ./
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push  $DOCKER_REPO:$ARCH-v0.1.0
