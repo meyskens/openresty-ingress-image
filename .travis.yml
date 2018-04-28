@@ -19,7 +19,7 @@ before_install:
   - docker run --rm --privileged multiarch/qemu-user-static:register
 
 script:
-  - docker build -t $DOCKER_REPO:$ARCH-v0.1.0 --build-arg ARCH="$ARCH" ./
+  - docker build -t $DOCKER_REPO:$ARCH-v0.1.0 --build-arg arch="$ARCH" ./
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
