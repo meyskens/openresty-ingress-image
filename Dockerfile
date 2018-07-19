@@ -1,5 +1,5 @@
 ARG arch
-FROM maartje/k8s-openresty-ingress:${arch}-fb30f5f23817667f474cbdbaf4de67ae4367b00d
+FROM maartje/k8s-openresty-ingress-redis:${arch}-d7b76eed44c78920aebe3054195ea66c5b104bf0
 
 RUN luarocks install lua-resty-http
 RUN luarocks install dkjson
